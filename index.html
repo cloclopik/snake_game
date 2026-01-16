@@ -2,42 +2,20 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Mini Games Hub</title>
+    <title>Game Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="menu">
+<div class="menu">
     <h1>Choisis ton jeu</h1>
+
+    <!-- IMPORTANT : ce sont des <a>, PAS des boutons JS -->
     <div class="buttons">
-        <button onclick="launchSnake()">🐍 Snake</button>
-        <button onclick="launchLabyrinthe()">🗺️ Labyrinthe Killer</button>
+        <a class="btn" href="snake/index.html">🐍 Snake</a>
+        <a class="btn" href="labyrinthe/index.html">🗺️ Labyrinthe Killer</a>
     </div>
 </div>
-
-<canvas id="gameCanvas" width="500" height="500"></canvas>
-
-<!-- SCRIPTS TOUJOURS À LA FIN -->
-<script src="save.js"></script>
-<script src="snake.js"></script>
-<script src="labyrinthe.js"></script>
-
-<script>
-    const menu = document.getElementById("menu");
-    const canvas = document.getElementById("gameCanvas");
-
-    function launchSnake() {
-        menu.style.display = "none";
-        canvas.style.display = "block";
-        startSnakeGame();
-    }
-
-    function launchLabyrinthe() {
-        menu.style.display = "none";
-        canvas.style.display = "block";
-        startLabyrintheGame();
-    }
-</script>
 
 </body>
 </html>
