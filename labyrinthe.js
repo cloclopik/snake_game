@@ -8,6 +8,6 @@ function startLabyrintheGame() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "white";
-    ctx.font = "30px Arial";
+    ctx.font = "28px Arial";
     ctx.fillText("Labyrinthe Killer", 120, 250);
 }
