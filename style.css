@@ -1,0 +1,16 @@
+/* Mettre tout le corps de la page au centre et avec une couleur de fond */
+body {
+    display: flex;            /* Pour centrer le contenu */
+    flex-direction: column;   /* Empile les éléments verticalement */
+    align-items: center;      /* Centre horizontalement */
+    justify-content: center;  /* Centre verticalement */
+    height: 100vh;            /* 100% de la hauteur de la fenêtre */
+    background-color: #f0f0f0; /* Couleur gris clair */
+    font-family: Arial, sans-serif; /* Police simple */
+}
+
+/* Style du canvas (la zone du jeu) */
+#gameCanvas {
+    background-color: #000;   /* Fond noir pour le jeu */
+    border: 2px solid #333;   /* Bordure grise */
+}
