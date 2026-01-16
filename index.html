@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Snake Game avec banane</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game 🍌</title>
 <style>
   body {
     background: #222;
@@ -27,31 +27,26 @@
 <canvas id="gameCanvas" width="400" height="400"></canvas>
 
 <script>
-// Récupérer le canvas et son contexte
+// --- CONFIGURATION DU JEU ---
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const box = 20;
 
-// Serpent et score
 let snake = [];
 snake[0] = { x: 9 * box, y: 10 * box };
 let score = 0;
+let direction = "RIGHT";
 
-// Image banane encodée en base64 (petite icône PNG)
-// Source libre (simple et petite pour test)
-const bananaImg = new Image();
-bananaImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAV0lEQVQ4T2NkoBAwUqifATEx8P///wMxUYYCTMewwMDAzMDEYRA1JiYiGQgYGRkZhhkAAh3AoFPCQcUQWcGwQwgU4zAxEjMHYIowu4SFCFp8AAC1B1DW61g7MgAAAABJRU5ErkJggg==";
-
-// Nourriture position aléatoire
 let food = {
     x: Math.floor(Math.random() * 20) * box,
     y: Math.floor(Math.random() * 20) * box
 };
 
-// Direction initiale
-let direction = "RIGHT";
+// --- BANANE EN IMAGE BASE64 ---
+const bananaImg = new Image();
+bananaImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAV0lEQVQ4T2NkoBAwUqifATEx8P///wMxUYYCTMewwMDAzMDEYRA1JiYiGQgYGRkZhhkAAh3AoFPCQcUQWcGwQwgU4zAxEjMHYIowu4SFCFp8AAC1B1DW61g7MgAAAABJRU5ErkJggg==";
 
-// Dessiner serpent rouge
+// --- DESSIN DU SERPENT ---
 function drawSnake() {
     ctx.fillStyle = "red";
     for (let i = 0; i < snake.length; i++) {
@@ -59,7 +54,7 @@ function drawSnake() {
     }
 }
 
-// Gestion des touches
+// --- CONTROLE DU SERPENT ---
 document.addEventListener("keydown", directionControl);
 function directionControl(event) {
     if (event.keyCode === 37 && direction !== "RIGHT") direction = "LEFT";
@@ -68,7 +63,7 @@ function directionControl(event) {
     else if (event.keyCode === 40 && direction !== "UP") direction = "DOWN";
 }
 
-// Collision avec corps
+// --- COLLISION AVEC CORPS ---
 function collision(head, array) {
     for (let i = 0; i < array.length; i++) {
         if (head.x === array[i].x && head.y === array[i].y) return true;
@@ -76,7 +71,7 @@ function collision(head, array) {
     return false;
 }
 
-// Déplacer serpent
+// --- DEPLACER LE SERPENT ---
 function moveSnake() {
     let headX = snake[0].x;
     let headY = snake[0].y;
@@ -114,14 +109,14 @@ function moveSnake() {
     snake.unshift(newHead);
 }
 
-// Boucle de jeu
+// --- BOUCLE DU JEU ---
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Dessiner la banane
     ctx.drawImage(bananaImg, food.x, food.y, box, box);
 
-    // Afficher score
+    // Afficher le score
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
     ctx.fillText("Score: " + score, 10, 20);
@@ -130,10 +125,10 @@ function gameLoop() {
     moveSnake();
 }
 
-let game = setInterval(gameLoop, 200);
-
-// Pour jouer sur téléphone, on ajoute aussi des boutons tactiles (optionnel)
-// On peut ajouter ça plus tard si tu veux.
+// --- LANCER LE JEU QUAND L'IMAGE EST CHARGÉE ---
+bananaImg.onload = function() {
+    game = setInterval(gameLoop, 200);
+};
 </script>
 
 </body>
