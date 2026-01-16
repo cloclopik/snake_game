@@ -101,3 +101,46 @@ function draw() {
     // nourriture
     ctx.fillStyle = "red";
     ctx.fillRect(
+        food.x * tileSize,
+        food.y * tileSize,
+        tileSize,
+        tileSize
+    );
+
+    // snake
+    snake.forEach((part, index) => {
+        ctx.fillStyle = index === 0 ? "lime" : "green";
+        ctx.fillRect(
+            part.x * tileSize,
+            part.y * tileSize,
+            tileSize,
+            tileSize
+        );
+    });
+}
+
+// CONTROLES
+document.addEventListener("keydown", e => {
+    switch (e.key) {
+        case "ArrowUp":
+            if (direction.y === 0) direction = { x: 0, y: -1 };
+            break;
+        case "ArrowDown":
+            if (direction.y === 0) direction = { x: 0, y: 1 };
+            break;
+        case "ArrowLeft":
+            if (direction.x === 0) direction = { x: -1, y: 0 };
+            break;
+        case "ArrowRight":
+            if (direction.x === 0) direction = { x: 1, y: 0 };
+            break;
+    }
+});
+
+// RESTART
+function restart() {
+    init();
+}
+
+// LANCEMENT
+init();
