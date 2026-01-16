@@ -7,21 +7,33 @@ body {
 }
 
 #menu {
-    margin-top: 150px;
+    margin-top: 200px;
 }
 
 h1 {
-    font-size: 40px;
-    margin-bottom: 30px;
+    font-size: 42px;
+    margin-bottom: 40px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
 }
 
 button {
     font-size: 20px;
-    padding: 15px 30px;
-    margin: 10px;
+    padding: 15px 35px;
     cursor: pointer;
-    border-radius: 8px;
+    border-radius: 10px;
     border: none;
+    background: white;
+    color: black;
+    transition: transform 0.2s;
+}
+
+button:hover {
+    transform: scale(1.05);
 }
 
 canvas {
