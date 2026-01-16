@@ -9,15 +9,34 @@
 
 <h1>🐍 Snake</h1>
 
-<canvas id="game" width="400" height="400"></canvas>
+<div id="menu">
+    <h2>Choisis la difficulté</h2>
+    <button onclick="startGame(150)">Facile</button>
+    <button onclick="startGame(100)">Normal</button>
+    <button onclick="startGame(60)">Difficile</button>
+    <br><br>
+    <a href="../index.html">⬅ Menu principal</a>
+</div>
 
-<div class="info">
+<div id="game" class="hidden">
+    <canvas id="canvas" width="400" height="400"></canvas>
+
     <p>Score : <span id="score">0</span></p>
-    <button id="restart">🔄 Rejouer</button>
+
+    <div class="buttons">
+        <button onclick="restart()">🔄 Rejouer</button>
+        <a href="../index.html">⬅ Menu</a>
+    </div>
+</div>
+
+<div id="gameover" class="hidden">
+    <h2>💀 Game Over</h2>
+    <p>Score final : <span id="finalScore">0</span></p>
+    <button onclick="restart()">🔄 Rejouer</button>
+    <br><br>
     <a href="../index.html">⬅ Menu</a>
 </div>
 
-<!-- ⚠️ script TOUJOURS À LA FIN -->
 <script src="./snake.js"></script>
 </body>
 </html>
