@@ -17,13 +17,6 @@ let food;
 let gameOver = false;
 
 // =======================
-// Image banane
-// =======================
-const bananaImg = new Image();
-bananaImg.src =
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAV0lEQVQ4T2NkoBAwUqifATEx8P///wMxUYYCTMewwMDAzMDEYRA1JiYiGQgYGRkZhhkAAh3AoFPCQcUQWcGwQwgU4zAxEjMHYIowu4SFCFp8AAC1B1DW61g7MgAAAABJRU5ErkJggg==";
-
-// =======================
 // Initialisation
 // =======================
 function initGame() {
@@ -33,41 +26,55 @@ function initGame() {
 
     snake = [{ x: 9 * box, y: 10 * box }];
 
-    food = {
-        x: Math.floor(Math.random() * gridSize) * box,
-        y: Math.floor(Math.random() * gridSize) * box
-    };
+    food = randomFood();
 
     clearInterval(game);
     game = setInterval(gameLoop, 150);
 }
 
 // =======================
-// Dessin de la grille
+// Grille verte
 // =======================
 function drawGrid() {
     for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
-            ctx.fillStyle = (x + y) % 2 === 0 ? "#6ab04c" : "#badc58";
+            ctx.fillStyle =
+                (x + y) % 2 === 0 ? "#6ab04c" : "#badc58";
             ctx.fillRect(x * box, y * box, box, box);
         }
     }
 }
 
 // =======================
-// Dessin du serpent
+// Fruit (canvas)
+// =======================
+function drawFood() {
+    ctx.fillStyle = "#f9ca24";
+    ctx.beginPath();
+    ctx.arc(
+        food.x + box / 2,
+        food.y + box / 2,
+        box / 2 - 2,
+        0,
+        Math.PI * 2
+    );
+    ctx.fill();
+}
+
+// =======================
+// Serpent
 // =======================
 function drawSnake() {
     ctx.fillStyle = "#ff3f34";
-    for (let part of snake) {
+    snake.forEach(part => {
         ctx.fillRect(part.x, part.y, box, box);
-    }
+    });
 }
 
 // =======================
 // Clavier
 // =======================
-document.addEventListener("keydown", (e) => {
+document.addEventListener("keydown", e => {
     if (gameOver && e.key === "Enter") {
         initGame();
         return;
@@ -80,10 +87,51 @@ document.addEventListener("keydown", (e) => {
 });
 
 // =======================
+// Contrôle tactile (SWIPE)
+// =======================
+let startX = 0;
+let startY = 0;
+
+canvas.addEventListener("touchstart", e => {
+    const t = e.touches[0];
+    startX = t.clientX;
+    startY = t.clientY;
+});
+
+canvas.addEventListener("touchend", e => {
+    if (gameOver) {
+        initGame();
+        return;
+    }
+
+    const t = e.changedTouches[0];
+    const dx = t.clientX - startX;
+    const dy = t.clientY - startY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+        if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
+        else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
+    } else {
+        if (dy > 0 && direction !== "UP") direction = "DOWN";
+        else if (dy < 0 && direction !== "DOWN") direction = "UP";
+    }
+});
+
+// =======================
 // Collision
 // =======================
 function collision(head, body) {
-    return body.some(part => head.x === part.x && head.y === part.y);
+    return body.some(p => p.x === head.x && p.y === head.y);
+}
+
+// =======================
+// Nourriture aléatoire
+// =======================
+function randomFood() {
+    return {
+        x: Math.floor(Math.random() * gridSize) * box,
+        y: Math.floor(Math.random() * gridSize) * box
+    };
 }
 
 // =======================
@@ -100,28 +148,18 @@ function moveSnake() {
 
     const newHead = { x: headX, y: headY };
 
-    // Mur
     if (
         headX < 0 || headX >= canvas.width ||
-        headY < 0 || headY >= canvas.height
+        headY < 0 || headY >= canvas.height ||
+        collision(newHead, snake)
     ) {
         endGame();
         return;
     }
 
-    // Corps
-    if (collision(newHead, snake)) {
-        endGame();
-        return;
-    }
-
-    // Nourriture
     if (headX === food.x && headY === food.y) {
         score++;
-        food = {
-            x: Math.floor(Math.random() * gridSize) * box,
-            y: Math.floor(Math.random() * gridSize) * box
-        };
+        food = randomFood();
     } else {
         snake.pop();
     }
@@ -142,8 +180,7 @@ function endGame() {
 // =======================
 function gameLoop() {
     drawGrid();
-
-    ctx.drawImage(bananaImg, food.x, food.y, box, box);
+    drawFood();
 
     ctx.fillStyle = "white";
     ctx.font = "18px Arial";
@@ -163,7 +200,7 @@ function gameLoop() {
 
         ctx.font = "16px Arial";
         ctx.fillText(
-            "Appuie sur Entrée pour rejouer",
+            "Appuie sur Entrée ou tape pour rejouer",
             canvas.width / 2,
             canvas.height / 2 + 25
         );
@@ -176,4 +213,3 @@ function gameLoop() {
 // Démarrage
 // =======================
 initGame();
-
