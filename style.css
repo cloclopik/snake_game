@@ -1,21 +1,17 @@
 body {
     margin: 0;
-    font-family: Arial, sans-serif;
     background: black;
     color: white;
+    font-family: Arial, sans-serif;
     text-align: center;
 }
 
 #menu {
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    margin-top: 100px;
 }
 
-#menu h1 {
-    font-size: 48px;
+h1 {
+    font-size: 40px;
     margin-bottom: 40px;
 }
 
@@ -25,12 +21,12 @@ body {
     margin: 10px;
     cursor: pointer;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
 }
 
 canvas {
     display: none;
-    margin: auto;
-    background: black;
-    border: 2px solid white;
+    margin: 50px auto;
+    background: #111;
+    border: 4px solid white;
 }
