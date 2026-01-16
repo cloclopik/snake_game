@@ -1,29 +1,41 @@
-// Canvas et contexte
+// =======================
+// Initialisation du canvas
+// =======================
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const box = 20;
 
-// Serpent
-let snake = [];
-snake[0] = { x: 9 * box, y: 10 * box };
-
-// Score
+// =======================
+// Variables globales
+// =======================
+let game; // IMPORTANT : déclaration du setInterval
 let score = 0;
+let direction = "RIGHT";
 
-// Nourriture
+// =======================
+// Serpent
+// =======================
+let snake = [
+    { x: 9 * box, y: 10 * box }
+];
+
+// =======================
+// Nourriture (banane)
+// =======================
 let food = {
     x: Math.floor(Math.random() * 20) * box,
     y: Math.floor(Math.random() * 20) * box
 };
 
-// Direction initiale
-let direction = "RIGHT";
-
-// Image de banane en base64
+// =======================
+// Image de la banane
+// =======================
 const bananaImg = new Image();
 bananaImg.src = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAV0lEQVQ4T2NkoBAwUqifATEx8P///wMxUYYCTMewwMDAzMDEYRA1JiYiGQgYGRkZhhkAAh3AoFPCQcUQWcGwQwgU4zAxEjMHYIowu4SFCFp8AAC1B1DW61g7MgAAAABJRU5ErkJggg==";
 
+// =======================
 // Dessiner le serpent
+// =======================
 function drawSnake() {
     ctx.fillStyle = "red";
     for (let i = 0; i < snake.length; i++) {
@@ -31,23 +43,36 @@ function drawSnake() {
     }
 }
 
-// Détecter touches clavier
+// =======================
+// Gestion du clavier
+// =======================
 document.addEventListener("keydown", (event) => {
-    if (event.keyCode === 37 && direction !== "RIGHT") direction = "LEFT";
-    else if (event.keyCode === 38 && direction !== "DOWN") direction = "UP";
-    else if (event.keyCode === 39 && direction !== "LEFT") direction = "RIGHT";
-    else if (event.keyCode === 40 && direction !== "UP") direction = "DOWN";
+    if (event.key === "ArrowLeft" && direction !== "RIGHT") {
+        direction = "LEFT";
+    } else if (event.key === "ArrowUp" && direction !== "DOWN") {
+        direction = "UP";
+    } else if (event.key === "ArrowRight" && direction !== "LEFT") {
+        direction = "RIGHT";
+    } else if (event.key === "ArrowDown" && direction !== "UP") {
+        direction = "DOWN";
+    }
 });
 
-// Collision avec corps
-function collision(head, array) {
-    for (let i = 0; i < array.length; i++) {
-        if (head.x === array[i].x && head.y === array[i].y) return true;
+// =======================
+// Détection collision corps
+// =======================
+function collision(head, body) {
+    for (let i = 0; i < body.length; i++) {
+        if (head.x === body[i].x && head.y === body[i].y) {
+            return true;
+        }
     }
     return false;
 }
 
+// =======================
 // Déplacer le serpent
+// =======================
 function moveSnake() {
     let headX = snake[0].x;
     let headY = snake[0].y;
@@ -57,10 +82,15 @@ function moveSnake() {
     if (direction === "UP") headY -= box;
     if (direction === "DOWN") headY += box;
 
-    let newHead = { x: headX, y: headY };
+    const newHead = { x: headX, y: headY };
 
     // Collision avec les murs
-    if (headX < 0 || headX >= canvas.width || headY < 0 || headY >= canvas.height) {
+    if (
+        headX < 0 ||
+        headX >= canvas.width ||
+        headY < 0 ||
+        headY >= canvas.height
+    ) {
         clearInterval(game);
         alert("Game Over ! Tu as touché le mur !");
         return;
@@ -69,15 +99,17 @@ function moveSnake() {
     // Collision avec le corps
     if (collision(newHead, snake)) {
         clearInterval(game);
-        alert("Game Over ! Tu as touché ton corps !");
+        alert("Game Over ! Tu t'es mordu !");
         return;
     }
 
     // Manger la nourriture
     if (headX === food.x && headY === food.y) {
         score++;
-        food.x = Math.floor(Math.random() * 20) * box;
-        food.y = Math.floor(Math.random() * 20) * box;
+        food = {
+            x: Math.floor(Math.random() * 20) * box,
+            y: Math.floor(Math.random() * 20) * box
+        };
     } else {
         snake.pop();
     }
@@ -85,25 +117,30 @@ function moveSnake() {
     snake.unshift(newHead);
 }
 
+// =======================
 // Boucle de jeu
+// =======================
 function gameLoop() {
     // Fond
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Dessiner la banane
+    // Banane
     ctx.drawImage(bananaImg, food.x, food.y, box, box);
 
-    // Afficher le score
+    // Score
     ctx.fillStyle = "white";
     ctx.font = "20px Arial";
-    ctx.fillText("Score: " + score, 10, 20);
+    ctx.fillText("Score : " + score, 10, 20);
 
     drawSnake();
     moveSnake();
 }
 
-// Attendre que l’image soit chargée
-bananaImg.onload = function() {
+// =======================
+// Lancer le jeu quand l'image est chargée
+// =======================
+bananaImg.onload = () => {
     game = setInterval(gameLoop, 200);
 };
+
