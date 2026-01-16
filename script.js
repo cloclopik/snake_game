@@ -176,3 +176,4 @@ function gameLoop() {
 // Démarrage
 // =======================
 initGame();
+
