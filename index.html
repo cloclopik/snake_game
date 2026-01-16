@@ -7,35 +7,25 @@
 </head>
 <body>
 
-<h1>Choisis ton jeu</h1>
+  <!-- MENU -->
+  <div id="menu">
+    <h1>Choisis ton jeu</h1>
+    <button id="btnSnake">Snake</button>
+    <button id="btnLab">Labyrinthe Killer</button>
+  </div>
 
-<button onclick="launchSnake()">Snake</button>
-<button onclick="launchLabyrinthe()">Labyrinthe Killer</button>
+  <!-- CANVAS UNIQUE -->
+  <canvas id="gameCanvas" width="640" height="640"></canvas>
 
-<canvas id="gameCanvas"></canvas>
+  <!-- SCRIPTS -->
+  <script src="save.js"></script>
+  <script src="snake.js"></script>
+  <script src="labyrinthe.js"></script>
 
-<script src="save.js"></script>
-<script src="snake.js"></script>
-<script src="labyrinthe.js"></script>
-<script src="shop.js"></script>
-
-<script>
-  function clearGame() {
-    if (window.stopSnake) stopSnake();
-    if (window.stopLabyrinthe) stopLabyrinthe();
-  }
-
-  function launchSnake() {
-    clearGame();
-    startSnake();
-  }
-
-  function launchLabyrinthe() {
-    clearGame();
-    startLabyrinthe();
-  }
-</script>
+  <script>
+    document.getElementById("btnSnake").onclick = launchSnake;
+    document.getElementById("btnLab").onclick = launchLabyrinthe;
+  </script>
 
 </body>
 </html>
-
