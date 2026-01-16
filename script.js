@@ -2,37 +2,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
-    const menu = document.getElementById("menu");
 
-    // =======================
-    // Niveaux
-    // =======================
+    const menu = document.getElementById("menu");
+    const gameOverScreen = document.getElementById("gameOverScreen");
+
     const levels = {
         1: { grid: 12, speed: 320 },
         2: { grid: 16, speed: 260 },
         3: { grid: 20, speed: 220 }
     };
 
+    let currentLevel;
     let gridCount, box, speed;
     let snake, direction, food, game;
 
     // =======================
-    // Démarrage depuis menu
+    // Démarrage
     // =======================
     function startGame(level) {
-        const config = levels[level];
+        currentLevel = level;
 
+        const config = levels[level];
         gridCount = config.grid;
         speed = config.speed;
         box = canvas.width / gridCount;
 
         menu.style.display = "none";
+        gameOverScreen.style.display = "none";
         canvas.style.display = "block";
 
         initGame();
     }
-
-    // 🔥 REND ACCESSIBLE AUX BOUTONS HTML
     window.startGame = startGame;
 
     // =======================
@@ -49,6 +49,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // =======================
+    function endGame() {
+        clearInterval(game);
+        canvas.style.display = "none";
+        gameOverScreen.style.display = "block";
+    }
+
+    // =======================
+    function replay() {
+        startGame(currentLevel);
+    }
+    window.replay = replay;
+
+    function backToMenu() {
+        gameOverScreen.style.display = "none";
+        menu.style.display = "block";
+    }
+    window.backToMenu = backToMenu;
+
+    // =======================
     function drawGrid() {
         for (let y = 0; y < gridCount; y++) {
             for (let x = 0; x < gridCount; x++) {
@@ -58,7 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    // =======================
     function drawFood() {
         ctx.fillStyle = "black";
         ctx.fillRect(
@@ -69,7 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
     }
 
-    // =======================
     function drawSnake() {
         snake.forEach((p, i) => {
             ctx.fillStyle = i === 0 ? "#c0392b" : "#e74c3c";
@@ -83,7 +100,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // =======================
     function randomFood() {
         return {
             x: Math.floor(Math.random() * gridCount) * box,
@@ -91,7 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    // =======================
     document.addEventListener("keydown", e => {
         if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
         if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
@@ -99,12 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
     });
 
-    // =======================
     function collision(head) {
         return snake.some(p => p.x === head.x && p.y === head.y);
     }
 
-    // =======================
     function moveSnake() {
         let { x, y } = snake[0];
 
@@ -120,9 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
             x >= canvas.width || y >= canvas.height ||
             collision(head)
         ) {
-            clearInterval(game);
-            menu.style.display = "block";
-            canvas.style.display = "none";
+            endGame();
             return;
         }
 
@@ -135,7 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
         snake.unshift(head);
     }
 
-    // =======================
     function gameLoop() {
         drawGrid();
         drawFood();
