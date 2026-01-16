@@ -20,14 +20,32 @@
 
     canvas {
         border: 2px solid #555;
+        display: none;
         touch-action: none;
+    }
+
+    .menu {
+        text-align: center;
+    }
+
+    button {
+        padding: 10px 20px;
+        margin: 10px;
+        font-size: 16px;
+        cursor: pointer;
     }
 </style>
 </head>
 <body>
 
 <h1>Snake Game</h1>
-<p id="levelText">Niveau : 1</p>
+
+<div class="menu" id="menu">
+    <h2>Choisis un niveau</h2>
+    <button onclick="startGame(1)">Niveau 1 (Facile)</button>
+    <button onclick="startGame(2)">Niveau 2 (Normal)</button>
+    <button onclick="startGame(3)">Niveau 3 (Difficile)</button>
+</div>
 
 <canvas id="gameCanvas" width="400" height="400"></canvas>
 
