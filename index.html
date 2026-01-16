@@ -3,27 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Snake Game 🍌</title>
+<title>Snake Game</title>
 
 <style>
     body {
+        margin: 0;
+        padding-top: 20px;
         background-color: black;
+        color: white;
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: flex-start;
-        margin: 0;
-        padding-top: 20px;
         font-family: Arial, sans-serif;
-        color: white;
-        touch-action: none; /* important mobile */
+        touch-action: none;
     }
 
-    h1 {
-        margin-bottom: 10px;
-    }
-
-    #gameCanvas {
+    canvas {
         border: 2px solid #555;
         touch-action: none;
     }
@@ -31,7 +26,7 @@
 </head>
 <body>
 
-<h1>Snake Game 🍌</h1>
+<h1>Snake Game</h1>
 
 <canvas id="gameCanvas" width="400" height="400"></canvas>
 
