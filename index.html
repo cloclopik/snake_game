@@ -37,7 +37,6 @@
     }
 </style>
 </head>
-
 <body>
 
 <h1>Snake Game</h1>
@@ -68,12 +67,18 @@ const gameOver = document.getElementById("gameOver");
 
 let snake, food, dir, box, grid, speed, loop, currentLevel;
 
+// =======================
+// CONFIG DES NIVEAUX
+// =======================
 const levels = {
-    1: { grid: 12, speed: 300 },
+    1: { grid: 12, speed: 320 },
     2: { grid: 16, speed: 260 },
     3: { grid: 20, speed: 220 }
 };
 
+// =======================
+// DÉMARRAGE
+// =======================
 function startGame(level) {
     currentLevel = level;
     grid = levels[level].grid;
@@ -84,7 +89,9 @@ function startGame(level) {
     gameOver.style.display = "none";
     canvas.style.display = "block";
 
-    snake = [{ x: box * 5, y: box * 5 }];
+    snake = [
+        { x: box * Math.floor(grid / 2), y: box * Math.floor(grid / 2) }
+    ];
     dir = "RIGHT";
     food = randomFood();
 
@@ -103,13 +110,31 @@ function backToMenu() {
     menu.style.display = "block";
 }
 
+// =======================
+// FRUIT (PAS DANS LE SNAKE)
+// =======================
 function randomFood() {
-    return {
-        x: Math.floor(Math.random() * grid) * box,
-        y: Math.floor(Math.random() * grid) * box
-    };
+    let pos;
+    let invalid;
+
+    do {
+        pos = {
+            x: Math.floor(Math.random() * grid) * box,
+            y: Math.floor(Math.random() * grid) * box
+        };
+
+        invalid = snake.some(part =>
+            part.x === pos.x && part.y === pos.y
+        );
+
+    } while (invalid);
+
+    return pos;
 }
 
+// =======================
+// CONTRÔLES CLAVIER
+// =======================
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft" && dir !== "RIGHT") dir = "LEFT";
     if (e.key === "ArrowRight" && dir !== "LEFT") dir = "RIGHT";
@@ -117,6 +142,9 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowDown" && dir !== "UP") dir = "DOWN";
 });
 
+// =======================
+// DESSINS
+// =======================
 function drawGrid() {
     for (let y = 0; y < grid; y++) {
         for (let x = 0; x < grid; x++) {
@@ -143,9 +171,19 @@ function drawSnake() {
     snake.forEach((p, i) => {
         ctx.fillStyle = i === 0 ? "#c0392b" : "#e74c3c";
         ctx.fillRect(p.x, p.y, box, box);
+
+        // yeux sur la tête
+        if (i === 0) {
+            ctx.fillStyle = "white";
+            ctx.fillRect(p.x + box * 0.2, p.y + box * 0.25, box * 0.15, box * 0.15);
+            ctx.fillRect(p.x + box * 0.6, p.y + box * 0.25, box * 0.15, box * 0.15);
+        }
     });
 }
 
+// =======================
+// LOGIQUE
+// =======================
 function collision(head) {
     return snake.some(p => p.x === head.x && p.y === head.y);
 }
@@ -178,6 +216,9 @@ function moveSnake() {
     snake.unshift(head);
 }
 
+// =======================
+// BOUCLE
+// =======================
 function gameLoop() {
     drawGrid();
     drawFood();
