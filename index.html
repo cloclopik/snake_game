@@ -5,19 +5,21 @@
     <title>Game Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 <div id="menu">
     <h1>Choisis ton jeu</h1>
 
     <div class="buttons">
-        <button onclick="launchSnake()">🐍 Snake</button>
-        <button onclick="launchLabyrinthe()">🧠 Labyrinthe Killer</button>
+        <button id="btnSnake">🐍 Snake</button>
+        <button id="btnLab">🧠 Labyrinthe Killer</button>
     </div>
 </div>
 
 <canvas id="gameCanvas" width="600" height="600"></canvas>
 
+<!-- SCRIPTS TOUJOURS EN BAS -->
 <script src="save.js"></script>
 <script src="snake.js"></script>
 <script src="labyrinthe.js"></script>
@@ -31,15 +33,17 @@
         canvas.style.display = "block";
     }
 
-    function launchSnake() {
+    document.getElementById("btnSnake").addEventListener("click", () => {
+        console.log("Snake lancé");
         hideMenu();
         startSnake();
-    }
+    });
 
-    function launchLabyrinthe() {
+    document.getElementById("btnLab").addEventListener("click", () => {
+        console.log("Labyrinthe lancé");
         hideMenu();
         startLabyrinthe();
-    }
+    });
 </script>
 
 </body>
