@@ -33,7 +33,7 @@
         display: none;
         margin: 20px auto;
         border: 3px solid #555;
-        touch-action: none;
+        background: black;
     }
 </style>
 </head>
@@ -44,40 +44,44 @@
 <!-- MENU PRINCIPAL -->
 <div id="mainMenu" class="screen">
     <h2>Choisis un jeu</h2>
-    <button onclick="openSnakeMenu()">🐍 Snake</button>
-    <button onclick="openGame2()">🎮 Jeu mystère</button>
+    <button onclick="goSnakeMenu()">🐍 Snake</button>
+    <button onclick="goGame2()">🎮 Jeu à venir</button>
 </div>
 
 <!-- MENU SNAKE -->
 <div id="snakeMenu" class="screen" style="display:none;">
-    <h2>Snake - Choisis un niveau</h2>
+    <h2>Snake – Choisis un niveau</h2>
     <button onclick="startSnake(1)">Facile</button>
     <button onclick="startSnake(2)">Normal</button>
     <button onclick="startSnake(3)">Difficile</button>
     <br>
-    <button onclick="backToMain()">⬅ Retour</button>
+    <button onclick="showMainMenu()">⬅ Retour</button>
 </div>
 
 <!-- GAME OVER -->
 <div id="snakeGameOver" class="screen" style="display:none;">
     <h2>Game Over</h2>
-    <button onclick="replaySnake()">🔁 Rejouer</button>
-    <button onclick="backToMain()">🏠 Menu principal</button>
+    <button onclick="restartSnake()">🔁 Rejouer</button>
+    <button onclick="showMainMenu()">🏠 Menu principal</button>
 </div>
 
-<!-- CANVAS -->
 <canvas id="game" width="420" height="420"></canvas>
 
 <script>
-// =======================
-// ÉCRANS
-// =======================
+// =====================
+// ELEMENTS
+// =====================
 const mainMenu = document.getElementById("mainMenu");
 const snakeMenu = document.getElementById("snakeMenu");
 const snakeGameOver = document.getElementById("snakeGameOver");
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+let loop;
+
+// =====================
+// AFFICHAGE
+// =====================
 function hideAll() {
     mainMenu.style.display = "none";
     snakeMenu.style.display = "none";
@@ -85,28 +89,25 @@ function hideAll() {
     canvas.style.display = "none";
 }
 
-// =======================
-// NAVIGATION
-// =======================
-function openSnakeMenu() {
-    hideAll();
-    snakeMenu.style.display = "block";
-}
-
-function openGame2() {
-    alert("Le deuxième jeu sera créé ensemble juste après 😉");
-}
-
-function backToMain() {
+function showMainMenu() {
     clearInterval(loop);
     hideAll();
     mainMenu.style.display = "block";
 }
 
-// =======================
-// SNAKE - CONFIG
-// =======================
-let snake, food, dir, box, grid, speed, loop, currentLevel;
+function goSnakeMenu() {
+    hideAll();
+    snakeMenu.style.display = "block";
+}
+
+function goGame2() {
+    alert("Le deuxième jeu sera créé ensemble juste après 😉");
+}
+
+// =====================
+// SNAKE CONFIG
+// =====================
+let snake, food, dir, box, grid, speed, currentLevel;
 
 const levels = {
     1: { grid: 12, speed: 320 },
@@ -114,9 +115,9 @@ const levels = {
     3: { grid: 20, speed: 220 }
 };
 
-// =======================
-// SNAKE - START
-// =======================
+// =====================
+// START SNAKE
+// =====================
 function startSnake(level) {
     currentLevel = level;
     grid = levels[level].grid;
@@ -136,30 +137,27 @@ function startSnake(level) {
     loop = setInterval(gameLoop, speed);
 }
 
-function replaySnake() {
+function restartSnake() {
     startSnake(currentLevel);
 }
 
-// =======================
-// FRUIT (PAS DANS SNAKE)
-// =======================
+// =====================
+// FRUIT SAFE
+// =====================
 function randomFood() {
-    let pos, invalid;
-
+    let pos;
     do {
         pos = {
             x: Math.floor(Math.random() * grid) * box,
             y: Math.floor(Math.random() * grid) * box
         };
-        invalid = snake.some(p => p.x === pos.x && p.y === pos.y);
-    } while (invalid);
-
+    } while (snake.some(p => p.x === pos.x && p.y === pos.y));
     return pos;
 }
 
-// =======================
-// CONTRÔLES
-// =======================
+// =====================
+// CONTROLES
+// =====================
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft" && dir !== "RIGHT") dir = "LEFT";
     if (e.key === "ArrowRight" && dir !== "LEFT") dir = "RIGHT";
@@ -167,9 +165,9 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowDown" && dir !== "UP") dir = "DOWN";
 });
 
-// =======================
+// =====================
 // DESSINS
-// =======================
+// =====================
 function drawGrid() {
     for (let y = 0; y < grid; y++) {
         for (let x = 0; x < grid; x++) {
@@ -182,13 +180,7 @@ function drawGrid() {
 function drawFood() {
     ctx.fillStyle = "black";
     ctx.beginPath();
-    ctx.arc(
-        food.x + box / 2,
-        food.y + box / 2,
-        box / 4,
-        0,
-        Math.PI * 2
-    );
+    ctx.arc(food.x + box/2, food.y + box/2, box/4, 0, Math.PI*2);
     ctx.fill();
 }
 
@@ -197,18 +189,18 @@ function drawSnake() {
         ctx.fillStyle = i === 0 ? "#c0392b" : "#e74c3c";
         ctx.fillRect(p.x, p.y, box, box);
 
-        // 👀 VISUEL DE LA TÊTE (CORRIGÉ)
+        // 👀 TÊTE DU SNAKE (VISIBLE)
         if (i === 0) {
             ctx.fillStyle = "white";
-            ctx.fillRect(p.x + box * 0.2, p.y + box * 0.25, box * 0.15, box * 0.15);
-            ctx.fillRect(p.x + box * 0.6, p.y + box * 0.25, box * 0.15, box * 0.15);
+            ctx.fillRect(p.x + box*0.2, p.y + box*0.25, box*0.15, box*0.15);
+            ctx.fillRect(p.x + box*0.6, p.y + box*0.25, box*0.15, box*0.15);
         }
     });
 }
 
-// =======================
+// =====================
 // LOGIQUE
-// =======================
+// =====================
 function collision(head) {
     return snake.some(p => p.x === head.x && p.y === head.y);
 }
@@ -241,15 +233,20 @@ function moveSnake() {
     snake.unshift(head);
 }
 
-// =======================
-// BOUCLE
-// =======================
+// =====================
+// LOOP
+// =====================
 function gameLoop() {
     drawGrid();
     drawFood();
     drawSnake();
     moveSnake();
 }
+
+// =====================
+// INITIALISATION
+// =====================
+showMainMenu(); // 👈 CRUCIAL
 </script>
 
 </body>
