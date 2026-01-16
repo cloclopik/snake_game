@@ -4,9 +4,10 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const box = 20;
+const gridSize = canvas.width / box;
 
 // =======================
-// Variables globales
+// Variables
 // =======================
 let game;
 let score;
@@ -23,20 +24,18 @@ bananaImg.src =
     "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAV0lEQVQ4T2NkoBAwUqifATEx8P///wMxUYYCTMewwMDAzMDEYRA1JiYiGQgYGRkZhhkAAh3AoFPCQcUQWcGwQwgU4zAxEjMHYIowu4SFCFp8AAC1B1DW61g7MgAAAABJRU5ErkJggg==";
 
 // =======================
-// Initialisation / Reset
+// Initialisation
 // =======================
 function initGame() {
     score = 0;
     direction = "RIGHT";
     gameOver = false;
 
-    snake = [
-        { x: 9 * box, y: 10 * box }
-    ];
+    snake = [{ x: 9 * box, y: 10 * box }];
 
     food = {
-        x: Math.floor(Math.random() * 20) * box,
-        y: Math.floor(Math.random() * 20) * box
+        x: Math.floor(Math.random() * gridSize) * box,
+        y: Math.floor(Math.random() * gridSize) * box
     };
 
     clearInterval(game);
@@ -44,17 +43,29 @@ function initGame() {
 }
 
 // =======================
+// Dessin de la grille
+// =======================
+function drawGrid() {
+    for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) {
+            ctx.fillStyle = (x + y) % 2 === 0 ? "#6ab04c" : "#badc58";
+            ctx.fillRect(x * box, y * box, box, box);
+        }
+    }
+}
+
+// =======================
 // Dessin du serpent
 // =======================
 function drawSnake() {
-    ctx.fillStyle = "red";
+    ctx.fillStyle = "#ff3f34";
     for (let part of snake) {
         ctx.fillRect(part.x, part.y, box, box);
     }
 }
 
 // =======================
-// Contrôles clavier
+// Clavier
 // =======================
 document.addEventListener("keydown", (e) => {
     if (gameOver && e.key === "Enter") {
@@ -69,7 +80,7 @@ document.addEventListener("keydown", (e) => {
 });
 
 // =======================
-// Collision avec soi-même
+// Collision
 // =======================
 function collision(head, body) {
     return body.some(part => head.x === part.x && head.y === part.y);
@@ -108,8 +119,8 @@ function moveSnake() {
     if (headX === food.x && headY === food.y) {
         score++;
         food = {
-            x: Math.floor(Math.random() * 20) * box,
-            y: Math.floor(Math.random() * 20) * box
+            x: Math.floor(Math.random() * gridSize) * box,
+            y: Math.floor(Math.random() * gridSize) * box
         };
     } else {
         snake.pop();
@@ -119,7 +130,7 @@ function moveSnake() {
 }
 
 // =======================
-// Fin de partie
+// Fin
 // =======================
 function endGame() {
     gameOver = true;
@@ -130,36 +141,31 @@ function endGame() {
 // Boucle principale
 // =======================
 function gameLoop() {
-    // Fond
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawGrid();
 
-    // Banane
     ctx.drawImage(bananaImg, food.x, food.y, box, box);
 
-    // Score
     ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score : " + score, 10, 25);
+    ctx.font = "18px Arial";
+    ctx.fillText("Score : " + score, 10, 20);
 
     drawSnake();
     moveSnake();
 
-    // Game Over
     if (gameOver) {
-        ctx.fillStyle = "rgba(0,0,0,0.7)";
+        ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "white";
-        ctx.font = "30px Arial";
+        ctx.font = "32px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 20);
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 10);
 
         ctx.font = "16px Arial";
         ctx.fillText(
             "Appuie sur Entrée pour rejouer",
             canvas.width / 2,
-            canvas.height / 2 + 20
+            canvas.height / 2 + 25
         );
 
         ctx.textAlign = "left";
