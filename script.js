@@ -5,12 +5,15 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 // =======================
-// Paramètres dynamiques
+// Paramètres par niveau
 // =======================
-let level = 1;
-let gridCount = 20;     // nombre de cases par ligne
-let box = canvas.width / gridCount;
-let speed = 200;        // vitesse plus lente
+const levels = {
+    1: { grid: 14, speed: 260 },
+    2: { grid: 18, speed: 220 },
+    3: { grid: 22, speed: 180 }
+};
+
+let gridCount, box, speed, level;
 
 // =======================
 // Variables jeu
@@ -18,29 +21,33 @@ let speed = 200;        // vitesse plus lente
 let snake;
 let direction;
 let food;
-let score;
 let game;
-let gameOver;
+let gameOver = false;
+
+// =======================
+// Lancement depuis menu
+// =======================
+function startGame(selectedLevel) {
+    level = selectedLevel;
+
+    gridCount = levels[level].grid;
+    speed = levels[level].speed;
+    box = canvas.width / gridCount;
+
+    document.getElementById("menu").style.display = "none";
+    canvas.style.display = "block";
+
+    initGame();
+}
 
 // =======================
 // Initialisation
 // =======================
-function initGame(resetLevel = false) {
-    if (resetLevel) {
-        level = 1;
-        gridCount = 20;
-        speed = 200;
-    }
-
-    box = canvas.width / gridCount;
-
-    snake = [{ x: 10 * box, y: 10 * box }];
+function initGame() {
+    snake = [{ x: Math.floor(gridCount / 2) * box, y: Math.floor(gridCount / 2) * box }];
     direction = "RIGHT";
-    score = 0;
-    gameOver = false;
     food = randomFood();
-
-    document.getElementById("levelText").textContent = "Niveau : " + level;
+    gameOver = false;
 
     clearInterval(game);
     game = setInterval(gameLoop, speed);
@@ -52,8 +59,7 @@ function initGame(resetLevel = false) {
 function drawGrid() {
     for (let y = 0; y < gridCount; y++) {
         for (let x = 0; x < gridCount; x++) {
-            ctx.fillStyle =
-                (x + y) % 2 === 0 ? "#6ab04c" : "#badc58";
+            ctx.fillStyle = (x + y) % 2 === 0 ? "#6ab04c" : "#badc58";
             ctx.fillRect(x * box, y * box, box, box);
         }
     }
@@ -73,28 +79,18 @@ function drawFood() {
 }
 
 // =======================
-// Serpent (tête spéciale)
+// Serpent (tête stylée)
 // =======================
 function drawSnake() {
     snake.forEach((part, index) => {
         if (index === 0) {
-            // Tête
             ctx.fillStyle = "#c0392b";
             ctx.fillRect(part.x, part.y, box, box);
 
-            // Yeux
             ctx.fillStyle = "white";
-            const eyeSize = box * 0.15;
-
-            let eye1X = part.x + box * 0.25;
-            let eye2X = part.x + box * 0.6;
-            let eyeY = part.y + box * 0.25;
-
-            if (direction === "UP") eyeY = part.y + box * 0.15;
-            if (direction === "DOWN") eyeY = part.y + box * 0.6;
-
-            ctx.fillRect(eye1X, eyeY, eyeSize, eyeSize);
-            ctx.fillRect(eye2X, eyeY, eyeSize, eyeSize);
+            const eye = box * 0.15;
+            ctx.fillRect(part.x + box * 0.2, part.y + box * 0.25, eye, eye);
+            ctx.fillRect(part.x + box * 0.6, part.y + box * 0.25, eye, eye);
         } else {
             ctx.fillStyle = "#e74c3c";
             ctx.fillRect(part.x, part.y, box, box);
@@ -116,10 +112,7 @@ function randomFood() {
 // Clavier
 // =======================
 document.addEventListener("keydown", e => {
-    if (gameOver && e.key === "Enter") {
-        initGame(true);
-        return;
-    }
+    if (gameOver && e.key === "Enter") initGame();
 
     if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
     if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
@@ -130,22 +123,16 @@ document.addEventListener("keydown", e => {
 // =======================
 // Tactile (swipe)
 // =======================
-let startX = 0;
-let startY = 0;
+let sx = 0, sy = 0;
 
 canvas.addEventListener("touchstart", e => {
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
+    sx = e.touches[0].clientX;
+    sy = e.touches[0].clientY;
 });
 
 canvas.addEventListener("touchend", e => {
-    if (gameOver) {
-        initGame(true);
-        return;
-    }
-
-    const dx = e.changedTouches[0].clientX - startX;
-    const dy = e.changedTouches[0].clientY - startY;
+    const dx = e.changedTouches[0].clientX - sx;
+    const dy = e.changedTouches[0].clientY - sy;
 
     if (Math.abs(dx) > Math.abs(dy)) {
         if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
@@ -159,8 +146,8 @@ canvas.addEventListener("touchend", e => {
 // =======================
 // Collision
 // =======================
-function collision(head, body) {
-    return body.some(p => p.x === head.x && p.y === head.y);
+function collision(head) {
+    return snake.some(p => p.x === head.x && p.y === head.y);
 }
 
 // =======================
@@ -180,7 +167,7 @@ function moveSnake() {
     if (
         headX < 0 || headX >= canvas.width ||
         headY < 0 || headY >= canvas.height ||
-        collision(newHead, snake)
+        collision(newHead)
     ) {
         gameOver = true;
         clearInterval(game);
@@ -188,17 +175,6 @@ function moveSnake() {
     }
 
     if (headX === food.x && headY === food.y) {
-        score++;
-
-        // Passage au niveau suivant
-        if (score % 5 === 0) {
-            level++;
-            gridCount += 2;      // plus de cases
-            speed -= 10;         // légèrement plus rapide
-            initGame();
-            return;
-        }
-
         food = randomFood();
     } else {
         snake.pop();
@@ -208,7 +184,7 @@ function moveSnake() {
 }
 
 // =======================
-// Boucle principale
+// Boucle
 // =======================
 function gameLoop() {
     drawGrid();
@@ -216,8 +192,3 @@ function gameLoop() {
     drawSnake();
     moveSnake();
 }
-
-// =======================
-// Démarrage
-// =======================
-initGame(true);
