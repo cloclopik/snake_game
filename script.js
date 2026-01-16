@@ -3,29 +3,28 @@
 // =======================
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+
 const box = 20;
 const gridSize = canvas.width / box;
 
 // =======================
 // Variables
 // =======================
-let game;
-let score;
-let direction;
 let snake;
+let direction;
 let food;
-let gameOver = false;
+let score;
+let game;
+let gameOver;
 
 // =======================
 // Initialisation
 // =======================
 function initGame() {
-    score = 0;
-    direction = "RIGHT";
-    gameOver = false;
-
     snake = [{ x: 9 * box, y: 10 * box }];
-
+    direction = "RIGHT";
+    score = 0;
+    gameOver = false;
     food = randomFood();
 
     clearInterval(game);
@@ -46,29 +45,36 @@ function drawGrid() {
 }
 
 // =======================
-// Fruit (canvas)
+// Fruit = POINT NOIR
 // =======================
 function drawFood() {
-    ctx.fillStyle = "#f9ca24";
-    ctx.beginPath();
-    ctx.arc(
-        food.x + box / 2,
-        food.y + box / 2,
-        box / 2 - 2,
-        0,
-        Math.PI * 2
+    ctx.fillStyle = "black";
+    ctx.fillRect(
+        food.x + box / 4,
+        food.y + box / 4,
+        box / 2,
+        box / 2
     );
-    ctx.fill();
 }
 
 // =======================
 // Serpent
 // =======================
 function drawSnake() {
-    ctx.fillStyle = "#ff3f34";
+    ctx.fillStyle = "red";
     snake.forEach(part => {
         ctx.fillRect(part.x, part.y, box, box);
     });
+}
+
+// =======================
+// Nourriture aléatoire
+// =======================
+function randomFood() {
+    return {
+        x: Math.floor(Math.random() * gridSize) * box,
+        y: Math.floor(Math.random() * gridSize) * box
+    };
 }
 
 // =======================
@@ -87,15 +93,14 @@ document.addEventListener("keydown", e => {
 });
 
 // =======================
-// Contrôle tactile (SWIPE)
+// Tactile (Swipe)
 // =======================
 let startX = 0;
 let startY = 0;
 
 canvas.addEventListener("touchstart", e => {
-    const t = e.touches[0];
-    startX = t.clientX;
-    startY = t.clientY;
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
 });
 
 canvas.addEventListener("touchend", e => {
@@ -104,9 +109,8 @@ canvas.addEventListener("touchend", e => {
         return;
     }
 
-    const t = e.changedTouches[0];
-    const dx = t.clientX - startX;
-    const dy = t.clientY - startY;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
 
     if (Math.abs(dx) > Math.abs(dy)) {
         if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
@@ -122,16 +126,6 @@ canvas.addEventListener("touchend", e => {
 // =======================
 function collision(head, body) {
     return body.some(p => p.x === head.x && p.y === head.y);
-}
-
-// =======================
-// Nourriture aléatoire
-// =======================
-function randomFood() {
-    return {
-        x: Math.floor(Math.random() * gridSize) * box,
-        y: Math.floor(Math.random() * gridSize) * box
-    };
 }
 
 // =======================
@@ -153,7 +147,8 @@ function moveSnake() {
         headY < 0 || headY >= canvas.height ||
         collision(newHead, snake)
     ) {
-        endGame();
+        gameOver = true;
+        clearInterval(game);
         return;
     }
 
@@ -168,43 +163,32 @@ function moveSnake() {
 }
 
 // =======================
-// Fin
-// =======================
-function endGame() {
-    gameOver = true;
-    clearInterval(game);
-}
-
-// =======================
 // Boucle principale
 // =======================
 function gameLoop() {
     drawGrid();
     drawFood();
+    drawSnake();
+    moveSnake();
 
     ctx.fillStyle = "white";
     ctx.font = "18px Arial";
     ctx.fillText("Score : " + score, 10, 20);
-
-    drawSnake();
-    moveSnake();
 
     if (gameOver) {
         ctx.fillStyle = "rgba(0,0,0,0.6)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "white";
-        ctx.font = "32px Arial";
+        ctx.font = "30px Arial";
         ctx.textAlign = "center";
-        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 10);
-
-        ctx.font = "16px Arial";
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2);
+        ctx.font = "14px Arial";
         ctx.fillText(
-            "Appuie sur Entrée ou tape pour rejouer",
+            "Entrée ou toucher l'écran pour rejouer",
             canvas.width / 2,
             canvas.height / 2 + 25
         );
-
         ctx.textAlign = "left";
     }
 }
