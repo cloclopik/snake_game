@@ -1,19 +1,21 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
+const menu = document.getElementById("menu");
 
+// =======================
 // Niveaux
+// =======================
 const levels = {
-    1: { grid: 14, speed: 280 },
-    2: { grid: 18, speed: 240 },
-    3: { grid: 22, speed: 200 }
+    1: { grid: 12, speed: 320 },
+    2: { grid: 16, speed: 260 },
+    3: { grid: 20, speed: 220 }
 };
 
 let gridCount, box, speed;
 let snake, direction, food, game;
-let gameOver = false;
 
 // =======================
-// DÉMARRAGE DEPUIS MENU
+// DÉMARRAGE
 // =======================
 function startGame(level) {
     const config = levels[level];
@@ -22,13 +24,11 @@ function startGame(level) {
     speed = config.speed;
     box = canvas.width / gridCount;
 
-    document.getElementById("menu").style.display = "none";
+    menu.style.display = "none";
     canvas.style.display = "block";
 
     initGame();
 }
-
-// 🔴 REND LA FONCTION ACCESSIBLE AUX BOUTONS
 window.startGame = startGame;
 
 // =======================
@@ -39,7 +39,6 @@ function initGame() {
     }];
     direction = "RIGHT";
     food = randomFood();
-    gameOver = false;
 
     clearInterval(game);
     game = setInterval(gameLoop, speed);
@@ -59,23 +58,23 @@ function drawGrid() {
 function drawFood() {
     ctx.fillStyle = "black";
     ctx.fillRect(
-        food.x + box * 0.25,
-        food.y + box * 0.25,
-        box * 0.5,
-        box * 0.5
+        food.x + box * 0.3,
+        food.y + box * 0.3,
+        box * 0.4,
+        box * 0.4
     );
 }
 
 // =======================
 function drawSnake() {
-    snake.forEach((part, i) => {
+    snake.forEach((p, i) => {
         ctx.fillStyle = i === 0 ? "#c0392b" : "#e74c3c";
-        ctx.fillRect(part.x, part.y, box, box);
+        ctx.fillRect(p.x, p.y, box, box);
 
         if (i === 0) {
             ctx.fillStyle = "white";
-            ctx.fillRect(part.x + box * 0.2, part.y + box * 0.25, box * 0.15, box * 0.15);
-            ctx.fillRect(part.x + box * 0.6, part.y + box * 0.25, box * 0.15, box * 0.15);
+            ctx.fillRect(p.x + box * 0.2, p.y + box * 0.25, box * 0.15, box * 0.15);
+            ctx.fillRect(p.x + box * 0.6, p.y + box * 0.25, box * 0.15, box * 0.15);
         }
     });
 }
@@ -91,8 +90,8 @@ function randomFood() {
 // =======================
 document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-    if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
     if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+    if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
     if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
 });
 
@@ -118,6 +117,8 @@ function moveSnake() {
         collision(head)
     ) {
         clearInterval(game);
+        menu.style.display = "block";
+        canvas.style.display = "none";
         return;
     }
 
