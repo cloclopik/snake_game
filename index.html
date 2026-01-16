@@ -1,35 +1,38 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snake Game</title>
-    <style>
-        body {
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            flex-direction: column;
-            font-family: Arial, sans-serif;
-        }
-        canvas {
-            background-color: #111;
-            display: block;
-            margin-bottom: 20px;
-        }
-        h1 {
-            color: white;
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake Game 🍌</title>
+
+<style>
+    body {
+        background-color: black;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: start;
+        margin: 0;
+        padding-top: 20px;
+        font-family: Arial, sans-serif;
+        color: white;
+    }
+
+    #gameCanvas {
+        background-color: #111;
+        border: 2px solid #555;
+    }
+</style>
 </head>
 <body>
-    <h1>Snake Game 🍌</h1>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
-    
-    <!-- Script JS externe -->
-    <script src="snake.js"></script>
+
+<h1>Snake Game 🍌</h1>
+
+<!-- Canvas du jeu -->
+<canvas id="gameCanvas" width="400" height="400"></canvas>
+
+<!-- Lien vers le JavaScript -->
+<script src="snake.js"></script>
+
 </body>
 </html>
