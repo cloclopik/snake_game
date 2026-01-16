@@ -1,54 +1,56 @@
-let labCanvas, labCtx;
-let labInterval = null;
+let labInterval;
+let player;
 
-/* =========================
-   LANCEMENT DU JEU
-========================= */
-
-window.startLabyrinthe = function () {
-  labCanvas = document.getElementById("gameCanvas");
-  labCtx = labCanvas.getContext("2d");
-
-  labCanvas.width = 640;
-  labCanvas.height = 640;
-
-  drawLabTitle();
-};
-
-/* =========================
-   STOP DU JEU
-========================= */
-
-window.stopLabyrinthe = function () {
-  clearInterval(labInterval);
-  labInterval = null;
-};
-
-/* =========================
-   AFFICHAGE TITRE
-========================= */
-
-function drawLabTitle() {
-  labCtx.clearRect(0, 0, labCanvas.width, labCanvas.height);
-
-  labCtx.fillStyle = "black";
-  labCtx.fillRect(0, 0, labCanvas.width, labCanvas.height);
-
-  labCtx.fillStyle = "white";
-  labCtx.font = "48px Arial";
-  labCtx.textAlign = "center";
-
-  labCtx.fillText(
-    "Labyrinthe Killer",
-    labCanvas.width / 2,
-    labCanvas.height / 2
-  );
-
-  labCtx.font = "20px Arial";
-  labCtx.fillText(
-    "Chargement...",
-    labCanvas.width / 2,
-    labCanvas.height / 2 + 40
-  );
+function launchLabyrinthe() {
+  showGame();
+  startLabyrinthe();
 }
 
+function startLabyrinthe() {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  player = {
+    x: 300,
+    y: 300,
+    size: 24,
+    speed: 3,
+    life: 3
+  };
+
+  document.addEventListener("keydown", movePlayer);
+
+  labInterval = setInterval(() => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Fond
+    ctx.fillStyle = "#111";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Joueur
+    ctx.fillStyle = "cyan";
+    ctx.fillRect(player.x, player.y, player.size, player.size);
+
+    // HUD Vie
+    ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    ctx.fillText("Vie : " + player.life, 10, 20);
+
+    // Titre
+    ctx.font = "20px Arial";
+    ctx.fillText("Labyrinthe Killer", canvas.width / 2 - 90, 30);
+
+  }, 60);
+}
+
+function movePlayer(e) {
+  if (e.key === "ArrowUp" || e.key === "z") player.y -= player.speed;
+  if (e.key === "ArrowDown" || e.key === "s") player.y += player.speed;
+  if (e.key === "ArrowLeft" || e.key === "q") player.x -= player.speed;
+  if (e.key === "ArrowRight" || e.key === "d") player.x += player.speed;
+}
+
+function stopLabyrinthe() {
+  clearInterval(labInterval);
+  document.removeEventListener("keydown", movePlayer);
+}
