@@ -1,146 +1,104 @@
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+// Sécurité : attendre que la page soit chargée
+window.onload = () => {
 
-const tileSize = 20;
-const tileCount = canvas.width / tileSize;
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
 
-let snake;
-let direction;
-let food;
-let score;
-let gameLoop;
+    const size = 20;
+    const tiles = canvas.width / size;
 
-// INITIALISATION
-function init() {
-    snake = [
-        { x: 10, y: 10 },
-        { x: 9, y: 10 },
-        { x: 8, y: 10 }
-    ];
-    direction = { x: 1, y: 0 };
-    score = 0;
-    document.getElementById("score").textContent = score;
-    spawnFood();
+    let snake;
+    let dir;
+    let food;
+    let score;
+    let loop;
 
-    clearInterval(gameLoop);
-    gameLoop = setInterval(update, 120);
-}
-
-// BOUCLE DU JEU
-function update() {
-    moveSnake();
-    if (checkCollision()) {
-        gameOver();
-        return;
-    }
-    draw();
-}
-
-// DEPLACEMENT
-function moveSnake() {
-    const head = {
-        x: snake[0].x + direction.x,
-        y: snake[0].y + direction.y
-    };
-
-    snake.unshift(head);
-
-    if (head.x === food.x && head.y === food.y) {
-        score++;
+    function start() {
+        snake = [
+            { x: 10, y: 10 },
+            { x: 9, y: 10 },
+            { x: 8, y: 10 }
+        ];
+        dir = { x: 1, y: 0 };
+        score = 0;
         document.getElementById("score").textContent = score;
         spawnFood();
-    } else {
-        snake.pop();
-    }
-}
 
-// NOURRITURE (NE SPAWN PAS DANS LE SNAKE)
-function spawnFood() {
-    let valid = false;
-    while (!valid) {
-        food = {
-            x: Math.floor(Math.random() * tileCount),
-            y: Math.floor(Math.random() * tileCount)
+        clearInterval(loop);
+        loop = setInterval(update, 120);
+    }
+
+    function update() {
+        move();
+        if (collision()) {
+            clearInterval(loop);
+            alert("💀 Game Over");
+            return;
+        }
+        draw();
+    }
+
+    function move() {
+        const head = {
+            x: snake[0].x + dir.x,
+            y: snake[0].y + dir.y
         };
-        valid = !snake.some(part => part.x === food.x && part.y === food.y);
-    }
-}
 
-// COLLISIONS
-function checkCollision() {
-    const head = snake[0];
+        snake.unshift(head);
 
-    // murs
-    if (
-        head.x < 0 || head.y < 0 ||
-        head.x >= tileCount || head.y >= tileCount
-    ) {
-        return true;
-    }
-
-    // corps
-    for (let i = 1; i < snake.length; i++) {
-        if (head.x === snake[i].x && head.y === snake[i].y) {
-            return true;
+        if (head.x === food.x && head.y === food.y) {
+            score++;
+            document.getElementById("score").textContent = score;
+            spawnFood();
+        } else {
+            snake.pop();
         }
     }
 
-    return false;
-}
-
-// GAME OVER
-function gameOver() {
-    clearInterval(gameLoop);
-    alert("💀 Game Over !");
-}
-
-// DESSIN
-function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // nourriture
-    ctx.fillStyle = "red";
-    ctx.fillRect(
-        food.x * tileSize,
-        food.y * tileSize,
-        tileSize,
-        tileSize
-    );
-
-    // snake
-    snake.forEach((part, index) => {
-        ctx.fillStyle = index === 0 ? "lime" : "green";
-        ctx.fillRect(
-            part.x * tileSize,
-            part.y * tileSize,
-            tileSize,
-            tileSize
-        );
-    });
-}
-
-// CONTROLES
-document.addEventListener("keydown", e => {
-    switch (e.key) {
-        case "ArrowUp":
-            if (direction.y === 0) direction = { x: 0, y: -1 };
-            break;
-        case "ArrowDown":
-            if (direction.y === 0) direction = { x: 0, y: 1 };
-            break;
-        case "ArrowLeft":
-            if (direction.x === 0) direction = { x: -1, y: 0 };
-            break;
-        case "ArrowRight":
-            if (direction.x === 0) direction = { x: 1, y: 0 };
-            break;
+    function spawnFood() {
+        food = {
+            x: Math.floor(Math.random() * tiles),
+            y: Math.floor(Math.random() * tiles)
+        };
     }
-});
 
-// RESTART
-function restart() {
-    init();
-}
+    function collision() {
+        const h = snake[0];
 
-// LANCEMENT
-init();
+        if (h.x < 0 || h.y < 0 || h.x >= tiles || h.y >= tiles) {
+            return true;
+        }
+
+        for (let i = 1; i < snake.length; i++) {
+            if (h.x === snake[i].x && h.y === snake[i].y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Food
+        ctx.fillStyle = "red";
+        ctx.fillRect(food.x * size, food.y * size, size, size);
+
+        // Snake
+        snake.forEach((p, i) => {
+            ctx.fillStyle = i === 0 ? "lime" : "green";
+            ctx.fillRect(p.x * size, p.y * size, size, size);
+        });
+    }
+
+    document.addEventListener("keydown", e => {
+        if (e.key === "ArrowUp" && dir.y === 0) dir = { x: 0, y: -1 };
+        if (e.key === "ArrowDown" && dir.y === 0) dir = { x: 0, y: 1 };
+        if (e.key === "ArrowLeft" && dir.x === 0) dir = { x: -1, y: 0 };
+        if (e.key === "ArrowRight" && dir.x === 0) dir = { x: 1, y: 0 };
+    });
+
+    document.getElementById("restart").onclick = start;
+
+    start();
+};
