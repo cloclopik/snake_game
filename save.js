@@ -1,6 +1,5 @@
 let saveData = {
     gold: 0,
-    snakeSkins: [],
+    skins: [],
     weapons: []
 };
-
