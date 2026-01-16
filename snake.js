@@ -6,7 +6,7 @@ function startSnakeGame() {
     let snake = [{ x: 10 * box, y: 10 * box }];
     let direction = "RIGHT";
     let food = spawnFood();
-    let interval = setInterval(draw, 130);
+    let game = setInterval(draw, 140);
 
     document.onkeydown = changeDirection;
 
@@ -31,7 +31,6 @@ function startSnakeGame() {
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // grille verte
         for (let x = 0; x < canvas.width; x += box) {
             for (let y = 0; y < canvas.height; y += box) {
                 ctx.fillStyle = (x / box + y / box) % 2 ? "#4e8234" : "#6aaa64";
@@ -39,13 +38,11 @@ function startSnakeGame() {
             }
         }
 
-        // fruit
         ctx.fillStyle = "red";
         ctx.beginPath();
         ctx.arc(food.x + box / 2, food.y + box / 2, box / 2.5, 0, Math.PI * 2);
         ctx.fill();
 
-        // snake
         snake.forEach((p, i) => {
             ctx.fillStyle = i === 0 ? "#00ffff" : "#00aa00";
             ctx.fillRect(p.x, p.y, box, box);
@@ -62,7 +59,7 @@ function startSnakeGame() {
             head.x >= canvas.width || head.y >= canvas.height ||
             snake.some(s => s.x === head.x && s.y === head.y)
         ) {
-            clearInterval(interval);
+            clearInterval(game);
             alert("Game Over");
             location.reload();
             return;
