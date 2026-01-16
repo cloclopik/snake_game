@@ -2,24 +2,24 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Game Hub</title>
+    <title>Mini Games Hub</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
+<!-- ===== MENU ===== -->
 <div id="menu">
     <h1>Choisis ton jeu</h1>
 
     <div class="buttons">
-        <button id="btnSnake">🐍 Snake</button>
-        <button id="btnLab">🧠 Labyrinthe Killer</button>
+        <button onclick="startSnake()">🐍 Snake</button>
+        <button onclick="startLabyrinthe()">🗺️ Labyrinthe Killer</button>
     </div>
 </div>
 
-<canvas id="gameCanvas" width="600" height="600"></canvas>
+<!-- ===== JEU ===== -->
+<canvas id="gameCanvas" width="500" height="500"></canvas>
 
-<!-- SCRIPTS TOUJOURS EN BAS -->
 <script src="save.js"></script>
 <script src="snake.js"></script>
 <script src="labyrinthe.js"></script>
@@ -28,22 +28,17 @@
     const menu = document.getElementById("menu");
     const canvas = document.getElementById("gameCanvas");
 
-    function hideMenu() {
+    function startSnake() {
         menu.style.display = "none";
         canvas.style.display = "block";
+        startSnakeGame();
     }
 
-    document.getElementById("btnSnake").addEventListener("click", () => {
-        console.log("Snake lancé");
-        hideMenu();
-        startSnake();
-    });
-
-    document.getElementById("btnLab").addEventListener("click", () => {
-        console.log("Labyrinthe lancé");
-        hideMenu();
-        startLabyrinthe();
-    });
+    function startLabyrinthe() {
+        menu.style.display = "none";
+        canvas.style.display = "block";
+        startLabyrintheGame();
+    }
 </script>
 
 </body>
