@@ -7,19 +7,17 @@
 </head>
 <body>
 
-<!-- ===== MENU ===== -->
 <div id="menu">
     <h1>Choisis ton jeu</h1>
-
     <div class="buttons">
-        <button onclick="startSnake()">🐍 Snake</button>
-        <button onclick="startLabyrinthe()">🗺️ Labyrinthe Killer</button>
+        <button onclick="launchSnake()">🐍 Snake</button>
+        <button onclick="launchLabyrinthe()">🗺️ Labyrinthe Killer</button>
     </div>
 </div>
 
-<!-- ===== JEU ===== -->
 <canvas id="gameCanvas" width="500" height="500"></canvas>
 
+<!-- SCRIPTS TOUJOURS À LA FIN -->
 <script src="save.js"></script>
 <script src="snake.js"></script>
 <script src="labyrinthe.js"></script>
@@ -28,13 +26,13 @@
     const menu = document.getElementById("menu");
     const canvas = document.getElementById("gameCanvas");
 
-    function startSnake() {
+    function launchSnake() {
         menu.style.display = "none";
         canvas.style.display = "block";
         startSnakeGame();
     }
 
-    function startLabyrinthe() {
+    function launchLabyrinthe() {
         menu.style.display = "none";
         canvas.style.display = "block";
         startLabyrintheGame();
