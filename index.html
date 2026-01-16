@@ -1,37 +1,46 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Game Hub</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Game Hub</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- MENU PRINCIPAL -->
-  <div id="menu">
+<div id="menu">
     <h1>Choisis ton jeu</h1>
-    <button id="btnSnake">Snake</button>
-    <button id="btnLab">Labyrinthe Killer</button>
-  </div>
 
-  <!-- UI SNAKE -->
-  <div id="snakeUI" style="display:none;">
-    <p id="scoreSnake">Score : 0</p>
-    <button onclick="showMenu()">Retour au menu</button>
-  </div>
+    <div class="buttons">
+        <button onclick="launchSnake()">🐍 Snake</button>
+        <button onclick="launchLabyrinthe()">🧠 Labyrinthe Killer</button>
+    </div>
+</div>
 
-  <!-- CANVAS UNIQUE -->
-  <canvas id="gameCanvas" width="600" height="600"></canvas>
+<canvas id="gameCanvas" width="600" height="600"></canvas>
 
-  <!-- SCRIPTS -->
-  <script src="save.js"></script>
-  <script src="snake.js"></script>
-  <script src="labyrinthe.js"></script>
+<script src="save.js"></script>
+<script src="snake.js"></script>
+<script src="labyrinthe.js"></script>
 
-  <script>
-    document.getElementById("btnSnake").onclick = launchSnake;
-    document.getElementById("btnLab").onclick = launchLabyrinthe;
-  </script>
+<script>
+    const menu = document.getElementById("menu");
+    const canvas = document.getElementById("gameCanvas");
+
+    function hideMenu() {
+        menu.style.display = "none";
+        canvas.style.display = "block";
+    }
+
+    function launchSnake() {
+        hideMenu();
+        startSnake();
+    }
+
+    function launchLabyrinthe() {
+        hideMenu();
+        startLabyrinthe();
+    }
+</script>
 
 </body>
 </html>
