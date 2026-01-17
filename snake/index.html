@@ -11,21 +11,21 @@
 
 <div id="menu">
     <h2>Choisis la difficulté</h2>
-    <button onclick="startGame(150)">Facile</button>
-    <button onclick="startGame(100)">Normal</button>
-    <button onclick="startGame(60)">Difficile</button>
+    <button onclick="startGame('easy')">Facile</button>
+    <button onclick="startGame('normal')">Normal</button>
+    <button onclick="startGame('hard')">Difficile</button>
     <br><br>
     <a href="../index.html">⬅ Menu principal</a>
 </div>
 
 <div id="game" class="hidden">
-    <canvas id="canvas" width="400" height="400"></canvas>
+    <canvas id="canvas"></canvas>
 
     <p>Score : <span id="score">0</span></p>
 
     <div class="buttons">
         <button onclick="restart()">🔄 Rejouer</button>
-        <a href="../index.html">⬅ Menu</a>
+        <button onclick="backToDifficulty()">⬅ Menu</button>
     </div>
 </div>
 
@@ -34,7 +34,7 @@
     <p>Score final : <span id="finalScore">0</span></p>
     <button onclick="restart()">🔄 Rejouer</button>
     <br><br>
-    <a href="../index.html">⬅ Menu</a>
+    <button onclick="backToDifficulty()">⬅ Menu</button>
 </div>
 
 <script src="./snake.js"></script>
