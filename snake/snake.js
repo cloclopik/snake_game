@@ -1,26 +1,45 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const tileSize = 20;
-const tiles = canvas.width / tileSize;
-
+let tileSize = 20;
+let tiles;
 let snake, direction, food, score, speed, loop;
+
+// ---------- SETTINGS PAR DIFFICULTÉ ----------
+
+const levels = {
+    easy:   { grid: 15, speed: 150 },
+    normal: { grid: 20, speed: 100 },
+    hard:   { grid: 25, speed: 60 }
+};
 
 // ---------- GAME FLOW ----------
 
-function startGame(selectedSpeed) {
-    speed = selectedSpeed;
+function startGame(level) {
+    tiles = levels[level].grid;
+    speed = levels[level].speed;
+
+    canvas.width = tiles * tileSize;
+    canvas.height = tiles * tileSize;
+
     document.getElementById("menu").classList.add("hidden");
-    document.getElementById("gameover").classList.add("hidden");
     document.getElementById("game").classList.remove("hidden");
+
     init();
+}
+
+function backToDifficulty() {
+    clearInterval(loop);
+    document.getElementById("game").classList.add("hidden");
+    document.getElementById("gameover").classList.add("hidden");
+    document.getElementById("menu").classList.remove("hidden");
 }
 
 function init() {
     snake = [
-        { x: 10, y: 10 },
-        { x: 9, y: 10 },
-        { x: 8, y: 10 }
+        { x: Math.floor(tiles / 2), y: Math.floor(tiles / 2) },
+        { x: Math.floor(tiles / 2) - 1, y: Math.floor(tiles / 2) },
+        { x: Math.floor(tiles / 2) - 2, y: Math.floor(tiles / 2) }
     ];
     direction = { x: 1, y: 0 };
     score = 0;
@@ -101,11 +120,9 @@ function gameOver() {
 function draw() {
     drawGrid();
 
-    // Food
     ctx.fillStyle = "red";
     ctx.fillRect(food.x * tileSize, food.y * tileSize, tileSize, tileSize);
 
-    // Snake
     snake.forEach((p, i) => {
         ctx.fillStyle = i === 0 ? "#00ff00" : "#009900";
         ctx.fillRect(p.x * tileSize, p.y * tileSize, tileSize, tileSize);
@@ -129,4 +146,3 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft" && direction.x === 0) direction = { x: -1, y: 0 };
     if (e.key === "ArrowRight" && direction.x === 0) direction = { x: 1, y: 0 };
 });
-
