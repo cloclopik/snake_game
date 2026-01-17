@@ -1,26 +1,18 @@
 body {
+    text-align: center;
     background: black;
     color: white;
     font-family: Arial;
-    text-align: center;
 }
 
 canvas {
     border: 3px solid white;
-    display: block;
-    margin: 20px auto;
+    display: none;
+    background: #111;
 }
 
 button {
     padding: 10px 20px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    background: white;
-    color: black;
-}
-
-.hidden {
-    display: none;
+    margin: 5px;
+    font-size: 18px;
 }
