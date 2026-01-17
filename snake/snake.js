@@ -129,3 +129,4 @@ document.addEventListener("keydown", e => {
     if (e.key === "ArrowLeft" && direction.x === 0) direction = { x: -1, y: 0 };
     if (e.key === "ArrowRight" && direction.x === 0) direction = { x: 1, y: 0 };
 });
+
