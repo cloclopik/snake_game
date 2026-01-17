@@ -14,7 +14,7 @@ let started = false;
 const levels = {
     easy:   { grid: 15, speed: 160 },
     normal: { grid: 20, speed: 100 },
-    hard:   { grid: 25, speed: 60 }
+    hard:   { grid: 25, speed: 100 } // 🔥 même vitesse que normal
 };
 
 function startGame(level) {
@@ -39,14 +39,14 @@ function init() {
         {x: Math.floor(tiles/2)-2, y: Math.floor(tiles/2)}
     ];
 
-    direction = {x:0, y:0}; // 🚨 STOP au début
+    direction = {x:0, y:0};
     started = false;
 
     score = 0;
     document.getElementById("score").textContent = score;
 
     spawnFoodSafe();
-    draw(); // dessine avant de lancer la boucle
+    draw();
 
     clearInterval(loop);
 }
@@ -56,6 +56,11 @@ function startLoop() {
         started = true;
         loop = setInterval(update, speed);
     }
+}
+
+function restartLoop() {
+    clearInterval(loop);
+    loop = setInterval(update, speed);
 }
 
 function spawnFoodSafe() {
@@ -83,6 +88,11 @@ function moveSnake() {
     if (head.x === food.x && head.y === food.y) {
         score++;
         document.getElementById("score").textContent = score;
+
+        // 🚀 ACCELERATION
+        if (speed > 40) speed -= 5;
+        restartLoop();
+
         spawnFoodSafe();
     } else {
         snake.pop();
@@ -140,7 +150,7 @@ function drawGrid() {
 }
 
 document.addEventListener("keydown", e => {
-    if (!started) startLoop(); // démarre au premier input
+    if (!started) startLoop();
 
     if (e.key === "ArrowUp" && direction.y === 0) direction = {x:0,y:-1};
     if (e.key === "ArrowDown" && direction.y === 0) direction = {x:0,y:1};
