@@ -9,6 +9,7 @@ let food;
 let score;
 let speed;
 let loop;
+let started = false;
 
 const levels = {
     easy:   { grid: 15, speed: 160 },
@@ -20,7 +21,6 @@ function startGame(level) {
     tiles = levels[level].grid;
     speed = levels[level].speed;
 
-    // adapte la taille des cases selon la difficulté
     tileSize = Math.floor(400 / tiles);
 
     canvas.width = tiles * tileSize;
@@ -39,14 +39,23 @@ function init() {
         {x: Math.floor(tiles/2)-2, y: Math.floor(tiles/2)}
     ];
 
-    direction = {x:1, y:0};
+    direction = {x:0, y:0}; // 🚨 STOP au début
+    started = false;
+
     score = 0;
     document.getElementById("score").textContent = score;
 
     spawnFoodSafe();
+    draw(); // dessine avant de lancer la boucle
 
     clearInterval(loop);
-    loop = setInterval(update, speed);
+}
+
+function startLoop() {
+    if (!started) {
+        started = true;
+        loop = setInterval(update, speed);
+    }
 }
 
 function spawnFoodSafe() {
@@ -131,6 +140,8 @@ function drawGrid() {
 }
 
 document.addEventListener("keydown", e => {
+    if (!started) startLoop(); // démarre au premier input
+
     if (e.key === "ArrowUp" && direction.y === 0) direction = {x:0,y:-1};
     if (e.key === "ArrowDown" && direction.y === 0) direction = {x:0,y:1};
     if (e.key === "ArrowLeft" && direction.x === 0) direction = {x:-1,y:0};
