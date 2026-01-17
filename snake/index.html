@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <title>Snake</title>
-    <link rel="stylesheet" href="./style.css">
+<meta charset="UTF-8">
+<title>Snake</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -20,23 +20,19 @@
 
 <div id="game" class="hidden">
     <canvas id="canvas"></canvas>
-
     <p>Score : <span id="score">0</span></p>
 
-    <div class="buttons">
-        <button onclick="restart()">🔄 Rejouer</button>
-        <button onclick="backToDifficulty()">⬅ Menu</button>
-    </div>
+    <button onclick="restart()">🔄 Rejouer</button>
+    <button onclick="backToDifficulty()">⬅ Menu</button>
 </div>
 
 <div id="gameover" class="hidden">
     <h2>💀 Game Over</h2>
     <p>Score final : <span id="finalScore">0</span></p>
     <button onclick="restart()">🔄 Rejouer</button>
-    <br><br>
     <button onclick="backToDifficulty()">⬅ Menu</button>
 </div>
 
-<script src="./snake.js"></script>
+<script src="snake.js"></script>
 </body>
 </html>
