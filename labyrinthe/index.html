@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Labyrinthe Killer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<h1>Labyrinthe Killer</h1>
+
+<div id="hud">
+    ❤️ Vie : <span id="hp">3</span> |
+    💰 Gold : <span id="gold">0</span>
+</div>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<div id="gameover" class="hidden">
+    <h2>Game Over</h2>
+    <button onclick="restart()">Rejouer</button>
+    <button onclick="location.href='../index.html'">Menu</button>
+</div>
+
+<script src="../save.js"></script>
+<script src="labyrinthe.js"></script>
+
+</body>
+</html>
 
