@@ -1,21 +1,19 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Game Hub</title>
+    <title>Arcade Games</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="menu">
-    <h1>Choisis ton jeu</h1>
+<h1>🎮 Choisis ton jeu</h1>
 
-    <!-- IMPORTANT : ce sont des <a>, PAS des boutons JS -->
-    <div class="buttons">
-        <a class="btn" href="snake/index.html">🐍 Snake</a>
-        <a class="btn" href="labyrinthe/index.html">🗺️ Labyrinthe Killer</a>
-    </div>
+<div class="menu">
+    <button onclick="window.location.href='snake/index.html'">🐍 Snake</button>
+    <button onclick="window.location.href='labyrinthe/index.html'">🗡️ Labyrinthe Killer</button>
 </div>
 
+<script src="save.js"></script>
+<script src="shop.js"></script>
 </body>
 </html>
