@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Labyrinthe Killer</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <h1>Labyrinthe Killer</h1>
-<div id="hud">❤️ Vie : 3 | 💰 Gold : 0</div>
+
+<div id="hud">
+    ❤️ Vie : <span id="life">3</span> | 💰 Gold : <span id="gold">0</span>
+</div>
 
 <canvas id="mazeCanvas"></canvas>
+
+<div id="gameOver" class="hidden">
+    <h2>GAME OVER</h2>
+    <button onclick="location.reload()">🔁 Rejouer</button>
+    <button onclick="window.location.href='../index.html'">⬅ Menu</button>
+</div>
 
 <script src="labyrinthe.js"></script>
 
 </body>
 </html>
-
-
