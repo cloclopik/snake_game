@@ -6,15 +6,19 @@ body {
 }
 
 canvas {
-    border: 2px solid white;
+    border: 3px solid white;
     background: #111;
+}
+
+#hud {
+    font-size: 20px;
+    margin-bottom: 10px;
 }
 
 .hidden {
     display: none;
 }
 
-#hud {
-    margin-bottom: 10px;
+#gameOver {
+    margin-top: 20px;
 }
-
